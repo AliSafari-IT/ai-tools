@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './PagesCommon.module.css'
+import ReportActionsBar from '../components/reports/ReportActionsBar'
+import AgentPromptBuilderModal from '../components/reports/AgentPromptBuilderModal'
 
 interface IncidentReport {
     id: string
@@ -80,6 +82,7 @@ export default function ReportsPage() {
     const [selectedReport, setSelectedReport] = useState<ReportDetail | null>(null)
     const [showModal, setShowModal] = useState(false)
     const [loadingDetail, setLoadingDetail] = useState(false)
+    const [showPromptBuilder, setShowPromptBuilder] = useState(false)
 
     useEffect(() => {
         fetchReports()
@@ -191,6 +194,14 @@ export default function ReportsPage() {
         closeModal()
     }
 
+    const handleOpenPromptBuilder = () => {
+        setShowPromptBuilder(true)
+    }
+
+    const closePromptBuilder = () => {
+        setShowPromptBuilder(false)
+    }
+
     const getSeverityClass = (severity: string) => {
         switch (severity.toLowerCase()) {
             case 'critical': return styles.critical
@@ -278,6 +289,11 @@ export default function ReportsPage() {
                         </div>
                         <div className={styles.modalBody}>
                             <p><strong>Created:</strong> {formatDate(selectedReport.createdAt)} | <strong>Provider:</strong> {selectedReport.output.provider}</p>
+                            
+                            <ReportActionsBar 
+                                report={selectedReport}
+                                onOpenPromptBuilder={handleOpenPromptBuilder}
+                            />
                             
                             <div className={styles.reportSection}>
                                 <h3>Executive Summary</h3>
@@ -424,6 +440,13 @@ export default function ReportsPage() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {showPromptBuilder && selectedReport && (
+                <AgentPromptBuilderModal
+                    report={selectedReport}
+                    onClose={closePromptBuilder}
+                />
             )}
         </div>
     )
