@@ -3,6 +3,10 @@ using LogCopilot.Application.Interfaces;
 using LogCopilot.Infrastructure.AI;
 using LogCopilot.Infrastructure.Clustering;
 using LogCopilot.Infrastructure.Data;
+using LogCopilot.Infrastructure.Features;
+using LogCopilot.Infrastructure.Integrations;
+using LogCopilot.Infrastructure.Licensing;
+using LogCopilot.Infrastructure.Plugins;
 using LogCopilot.Infrastructure.Services;
 using LogCopilot.Infrastructure.Storage;
 using LogCopilot.Infrastructure.Tracing;
@@ -66,6 +70,30 @@ else
 {
     builder.Services.AddSingleton<IAIProvider, MockAIProvider>();
 }
+
+builder.Services.AddSingleton<IFeatureFlagService, FeatureFlagService>();
+
+var featureFlags = new FeatureFlagService(builder.Configuration);
+var proEnabled = featureFlags.IsEnabled("ProEnabled");
+var licenseKey =
+    builder.Configuration["LICENSE_KEY"] ?? Environment.GetEnvironmentVariable("LICENSE_KEY");
+var hasValidLicense =
+    !string.IsNullOrEmpty(licenseKey)
+    && licenseKey.StartsWith("LC-PRO-")
+    && licenseKey.Length >= 20;
+
+if (proEnabled && hasValidLicense)
+{
+    builder.Services.AddSingleton<ILicenseVerifier, ProLicenseVerifier>();
+    builder.Services.AddScoped<IIncidentNarrativeGenerator, OpenAiNarrativeGenerator>();
+}
+else
+{
+    builder.Services.AddSingleton<ILicenseVerifier, CommunityLicenseVerifier>();
+    builder.Services.AddScoped<IIncidentNarrativeGenerator, CommunityHeuristicNarrativeGenerator>();
+}
+
+builder.Services.AddScoped<IIntegrationSink, NullIntegrationSink>();
 
 builder.Services.AddHttpContextAccessor();
 

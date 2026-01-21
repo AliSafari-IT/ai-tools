@@ -5,8 +5,12 @@ using LogCopilot.Domain.Entities;
 using LogCopilot.Infrastructure.AI;
 using LogCopilot.Infrastructure.Analysis;
 using LogCopilot.Infrastructure.Data;
+using LogCopilot.Infrastructure.Features;
+using LogCopilot.Infrastructure.Licensing;
+using LogCopilot.Infrastructure.Plugins;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace LogCopilot.Infrastructure.Services;
@@ -17,17 +21,29 @@ public class IncidentReportService : IIncidentReportService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IAIProvider _aiProvider;
     private readonly ILogger<IncidentReportService> _logger;
+    private readonly IIncidentNarrativeGenerator _narrativeGenerator;
+    private readonly ILicenseVerifier _licenseVerifier;
+    private readonly IFeatureFlagService _featureFlags;
+    private readonly IConfiguration _configuration;
 
     public IncidentReportService(
         LogCopilotDbContext context,
         IHttpContextAccessor httpContextAccessor,
         IAIProvider aiProvider,
-        ILogger<IncidentReportService> logger)
+        ILogger<IncidentReportService> logger,
+        IIncidentNarrativeGenerator narrativeGenerator,
+        ILicenseVerifier licenseVerifier,
+        IFeatureFlagService featureFlags,
+        IConfiguration configuration)
     {
         _context = context;
         _httpContextAccessor = httpContextAccessor;
         _aiProvider = aiProvider;
         _logger = logger;
+        _narrativeGenerator = narrativeGenerator;
+        _licenseVerifier = licenseVerifier;
+        _featureFlags = featureFlags;
+        _configuration = configuration;
     }
 
     public async Task<IncidentReportDto> GenerateReportAsync(GenerateReportDto dto)
@@ -173,54 +189,7 @@ public class IncidentReportService : IIncidentReportService
 
     private async Task<ReportOutput> GenerateReportOutputAsync(List<LogEvent> events, ReportScope scope, GenerateReportDto dto)
     {
-        if (events.Count == 0)
-        {
-            return new ReportOutput
-            {
-                ExecutiveSummary = "No log events found for the specified scope.",
-                Metrics = new ReportMetrics(),
-                TopIssues = new List<TopIssue>(),
-                RootCauseHypotheses = new List<RootCauseHypothesis>(),
-                RecommendedFixPlan = new List<FixTask>(),
-                ObservabilityGaps = new List<string> { "No events available for analysis" },
-                TimelineHighlights = new List<TimelineHighlight>(),
-                Provider = "Heuristic"
-            };
-        }
-
-        var errorCount = events.Count(e => e.Level >= Domain.Entities.LogLevel.Error);
-        var warningCount = events.Count(e => e.Level == Domain.Entities.LogLevel.Warning);
-
-        if (_aiProvider is MockAIProvider)
-        {
-            return await GenerateComprehensiveReportAsync(events, scope, dto);
-        }
-
-        try
-        {
-            var prompt = BuildReportPrompt(events, errorCount, warningCount, scope);
-            var aiResponse = await _aiProvider.GenerateIncidentReportAsync(prompt);
-            
-            try
-            {
-                var output = JsonSerializer.Deserialize<ReportOutput>(aiResponse);
-                if (output != null)
-                {
-                    output.Provider = "AI";
-                    return output;
-                }
-            }
-            catch
-            {
-                _logger.LogWarning("Failed to parse AI response as JSON, using fallback");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "AI provider failed, using fallback report generation");
-        }
-
-        return await GenerateComprehensiveReportAsync(events, scope, dto);
+        return await _narrativeGenerator.GenerateNarrativeAsync(events, scope, dto);
     }
 
     private async Task<ReportOutput> GenerateComprehensiveReportAsync(List<LogEvent> events, ReportScope scope, GenerateReportDto dto)
