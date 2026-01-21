@@ -1,0 +1,29 @@
+{
+  "name": "ai-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:clean": "docker compose down -v --remove-orphans",
+    "docker:restart": "docker compose restart",
+    "docker:ps": "docker compose ps",
+    "dev": "docker compose up --build",
+    "dev:local": "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+    "dev:backend": "cd src/LogCopilot.Api && dotnet clean && dotnet build && dotnet run",
+    "dev:frontend": "cd frontend && npm run dev",
+    "migrate": "cd src/LogCopilot.Api && dotnet ef database update --project ../LogCopilot.Infrastructure/LogCopilot.Infrastructure.csproj",
+    "test": "echo \"Error: no test specified\" && exit 1"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.1",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

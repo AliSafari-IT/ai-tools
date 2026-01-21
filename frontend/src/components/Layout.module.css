@@ -1,0 +1,96 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--asm-color-surface);
+  border-right: 1px solid var(--asm-color-border);
+  display: flex;
+  flex-direction: column;
+  padding: var(--asm-space-6);
+}
+
+.logo {
+  margin-bottom: 2rem;
+}
+
+.logo h1 {
+  font-size: var(--asm-font-size-2xl);
+  margin-bottom: 0.25rem;
+  color: var(--asm-color-brand-primary-500);
+}
+
+.logo p {
+  font-size: var(--asm-font-size-sm);
+  color: var(--asm-color-text-muted);
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav a {
+  padding: 0.75rem 1rem;
+  color: var(--asm-color-text);
+  text-decoration: none;
+  border-radius: var(--asm-radius-md);
+  transition: background-color var(--asm-motion-duration-normal);
+}
+
+.nav a:hover {
+  background-color: var(--asm-color-surface-muted);
+}
+
+.nav a.active {
+  background-color: var(--asm-color-button-primary-bg);
+  color: var(--asm-color-button-primary-text);
+}
+
+.user {
+  border-top: 1px solid var(--asm-color-border);
+  padding-top: var(--asm-space-4);
+  margin-top: var(--asm-space-4);
+}
+
+.userInfo {
+  margin-bottom: 0.75rem;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.userEmail {
+  font-size: var(--asm-font-size-xs);
+  color: var(--asm-color-text-muted);
+}
+
+.logoutBtn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid var(--asm-color-border);
+  color: var(--asm-color-text);
+  border-radius: var(--asm-radius-sm);
+  cursor: pointer;
+  font-size: var(--asm-font-size-sm);
+  transition: all var(--asm-motion-duration-normal);
+}
+
+.logoutBtn:hover {
+  background-color: var(--asm-color-surface-muted);
+  border-color: var(--asm-color-text-muted);
+}
+
+.main {
+  flex: 1;
+  padding: var(--asm-space-8);
+  overflow-y: auto;
+}

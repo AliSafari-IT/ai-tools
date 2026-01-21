@@ -1,0 +1,24 @@
+@import "@asafarim/design-tokens/css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: var(--asm-font-family-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--asm-color-bg);
+  color: var(--asm-color-text);
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}
+
+#root {
+  min-height: 100vh;
+}

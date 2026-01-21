@@ -1,0 +1,108 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.card {
+  background-color: var(--asm-color-surface);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-lg);
+  padding: var(--asm-space-8);
+  width: 100%;
+  max-width: 420px;
+}
+
+.card h1 {
+  font-size: var(--asm-font-size-3xl);
+  color: var(--asm-color-brand-primary-500);
+  margin-bottom: 0.5rem;
+}
+
+.card h2 {
+  font-size: var(--asm-font-size-xl);
+  margin-bottom: var(--asm-space-6);
+  color: var(--asm-color-text-muted);
+  font-weight: var(--asm-font-weight-500);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-500);
+  color: var(--asm-color-text);
+}
+
+.field input {
+  padding: 0.75rem;
+  background-color: var(--asm-color-input-bg);
+  border: 1px solid var(--asm-color-input-border);
+  border-radius: var(--asm-radius-sm);
+  color: var(--asm-color-input-text);
+  font-size: var(--asm-font-size-md);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--asm-color-input-border-focus);
+}
+
+.error {
+  padding: 0.75rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--asm-color-input-error-border);
+  border-radius: var(--asm-radius-sm);
+  color: var(--asm-color-semantic-error);
+  font-size: var(--asm-font-size-sm);
+}
+
+.submitBtn {
+  padding: 0.875rem;
+  background-color: var(--asm-color-button-primary-bg);
+  color: var(--asm-color-button-primary-text);
+  border: none;
+  border-radius: var(--asm-radius-sm);
+  font-size: var(--asm-font-size-md);
+  font-weight: var(--asm-font-weight-600);
+  cursor: pointer;
+  transition: background-color var(--asm-motion-duration-normal);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: var(--asm-color-button-primary-bg-hover);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.link {
+  margin-top: var(--asm-space-6);
+  text-align: center;
+  font-size: var(--asm-font-size-sm);
+  color: var(--asm-color-text-muted);
+}
+
+.link a {
+  color: var(--asm-color-brand-primary-500);
+  text-decoration: none;
+  font-weight: var(--asm-font-weight-500);
+}
+
+.link a:hover {
+  text-decoration: underline;
+}

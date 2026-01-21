@@ -1,0 +1,75 @@
+.container {
+  max-width: 1200px;
+}
+
+.container h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--asm-color-text-muted);
+  margin-bottom: var(--asm-space-8);
+}
+
+.uploadCard {
+  background-color: var(--asm-color-surface);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-lg);
+  padding: var(--asm-space-8);
+  margin-bottom: var(--asm-space-8);
+}
+
+.uploadCard h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.dropzone {
+  border: 2px dashed var(--asm-color-border);
+  border-radius: var(--asm-radius-md);
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--asm-motion-duration-normal);
+}
+
+.dropzone:hover {
+  border-color: var(--asm-color-brand-primary-500);
+  background-color: rgba(58, 90, 254, 0.05);
+}
+
+.dropzone p {
+  margin-bottom: 0.5rem;
+}
+
+.hint {
+  font-size: var(--asm-font-size-sm);
+  color: var(--asm-color-text-muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat {
+  background-color: var(--asm-color-surface);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-lg);
+  padding: var(--asm-space-6);
+}
+
+.stat h3 {
+  font-size: var(--asm-font-size-sm);
+  color: var(--asm-color-text-muted);
+  font-weight: var(--asm-font-weight-500);
+  margin-bottom: 0.75rem;
+}
+
+.statValue {
+  font-size: var(--asm-font-size-5xl);
+  font-weight: var(--asm-font-weight-700);
+  color: var(--asm-color-brand-primary-500);
+}
