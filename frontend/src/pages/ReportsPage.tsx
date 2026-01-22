@@ -288,7 +288,7 @@ export default function ReportsPage() {
                 </tr>
               ) : (
                 reports.map(report => (
-                  <tr key={report.id}>
+                  <tr key={report.id} className={styles.reportRow}>
                     <td data-label="Scope">{report.scope}</td>
                     <td data-label="Summary" className={styles.cellClamp2}>{truncateSummary(report.summary)}</td>
                     <td data-label="Created" className={styles.cellNowrap}>{formatDate(report.createdAt)}</td>
