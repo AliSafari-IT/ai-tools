@@ -20,6 +20,7 @@ export default function Layout() {
   const { user, organization, logout } = useAuth()
   const location = useLocation()
   const [navOpen, setNavOpen] = useState(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
   const isActive = (path: string) => location.pathname.startsWith(path)
 
@@ -48,6 +49,12 @@ export default function Layout() {
     }
   }, [navOpen])
 
+  const handleThemeToggle = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+    // data theme attribute on html element
+    document.documentElement.setAttribute('data-theme', theme === 'light' ? 'dark' : 'light')
+  }
+
   return (
     <div className={styles.layout}>
       <header className={styles.topbar}>
@@ -68,7 +75,13 @@ export default function Layout() {
           <img src="/logo.svg" alt="Log Copilot" width="28" height="28" />
           <div className={styles.topbarBrandText}>
             <div className={styles.topbarTitle}>Log Copilot</div>
-            <div className={styles.topbarOrg}>{organization?.name}</div>
+            <div className={styles.topbarMeta}>
+              <div className={styles.topbarOrg}>{organization?.name}</div>
+              {/* theme toggle */}
+              <button onClick={handleThemeToggle} className={styles.themeToggle}>
+                {theme === 'light' ? '🌙' : '☀️'}
+              </button>
+            </div>
           </div>
         </div>
 

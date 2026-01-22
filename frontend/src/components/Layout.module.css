@@ -90,6 +90,25 @@
   max-width: 52vw;
 }
 
+.topbarMeta {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  gap: var(--asm-space-1);
+}
+
+.themeToggle {
+  padding-left: 0.5rem;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--asm-radius-lg);
+  cursor: pointer;
+}
+
+.themeToggle:hover {
+  background-color: var(--asm-color-brand-primary-500);
+}
+
 .topbarActions {
   display: flex;
   align-items: center;

@@ -130,7 +130,7 @@
 
 .inputs input:focus {
   outline: none;
-  border-color: var(--asm-color-input-border-focus);
+  border-color: var(--asm-color-primary-500);
   box-shadow: 0 0 0 3px rgba(58, 90, 254, 0.1);
 }
 
@@ -275,7 +275,7 @@
 
 .confirmInput:focus {
   outline: none;
-  border-color: var(--asm-color-input-border-focus);
+  border-color: var(--asm-color-primary-500);
   box-shadow: 0 0 0 3px rgba(58, 90, 254, 0.1);
 }
 
@@ -317,13 +317,13 @@
 }
 
 .success {
-  background-color: var(--asm-color-success-light);
-  color: var(--asm-color-success);
-  border: 1px solid var(--asm-color-success);
+  background-color: var(--asm-color-success-50);
+  color: var(--asm-color-success-700);
+  border: 1px solid var(--asm-color-success-200);
 }
 
 .error {
-  background-color: var(--asm-color-error-light);
-  color: var(--asm-color-error);
-  border: 1px solid var(--asm-color-error);
+  background-color: var(--asm-color-danger-50);
+  color: var(--asm-color-danger-700);
+  border: 1px solid var(--asm-color-danger-200);
 }
