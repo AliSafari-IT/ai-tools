@@ -1,0 +1,156 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #7f8c8d;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  color: #2c3e50;
+}
+
+.form {
+  padding: 20px;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #34495e;
+}
+
+.form select {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.generateBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.generateBtn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.generateBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.preview {
+  padding: 20px;
+}
+
+.preview pre {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.copyBtn,
+.downloadBtn,
+.backBtn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.copyBtn {
+  background-color: #27ae60;
+  color: white;
+}
+
+.copyBtn:hover {
+  background-color: #229954;
+}
+
+.downloadBtn {
+  background-color: #3498db;
+  color: white;
+}
+
+.downloadBtn:hover {
+  background-color: #2980b9;
+}
+
+.backBtn {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.backBtn:hover {
+  background-color: #7f8c8d;
+}

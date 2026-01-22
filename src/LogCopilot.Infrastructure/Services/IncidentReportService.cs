@@ -73,6 +73,10 @@ public class IncidentReportService : IIncidentReportService
             OutputJson = JsonSerializer.Serialize(output),
             Summary = output.ExecutiveSummary,
             Provider = output.Provider,
+            RequestedProvider = output.RequestedProvider,
+            ActualProvider = output.ActualProvider,
+            ProviderStatus = output.ProviderStatus,
+            ProviderErrorSummary = output.ProviderErrorSummary,
             Status = "Completed",
             Version = 1,
             CreatedAt = DateTime.UtcNow,
@@ -150,7 +154,37 @@ public class IncidentReportService : IIncidentReportService
             TimeRangeStart = report.TimeRangeStart,
             TimeRangeEnd = report.TimeRangeEnd,
             CreatedAt = report.CreatedAt,
+            OrganizationId = report.OrganizationId,
             Output = output
+        };
+    }
+
+    public async Task DeleteReportAsync(Guid id)
+    {
+        var report = await _context.IncidentReports.FindAsync(id);
+        if (report != null)
+        {
+            _context.IncidentReports.Remove(report);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<BulkDeleteResult> BulkDeleteReportsAsync(Guid organizationId, Guid[] ids)
+    {
+        var reports = await _context.IncidentReports
+            .Where(r => r.OrganizationId == organizationId && ids.Contains(r.Id))
+            .ToListAsync();
+
+        var foundIds = reports.Select(r => r.Id).ToHashSet();
+        var notFoundIds = ids.Where(id => !foundIds.Contains(id)).ToArray();
+
+        _context.IncidentReports.RemoveRange(reports);
+        await _context.SaveChangesAsync();
+
+        return new BulkDeleteResult
+        {
+            DeletedCount = reports.Count,
+            NotFoundIds = notFoundIds
         };
     }
 

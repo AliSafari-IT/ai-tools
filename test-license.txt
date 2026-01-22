@@ -1,0 +1,7 @@
+Testing license configuration:
+- ProEnabled should be: true
+- LICENSE_KEY should be: LC-PRO-1234567890abcdefghij
+- Expected provider: OpenAI (Pro)
+- Actual provider: Community (fallback)
+
+This indicates the .env file is not being loaded or the configuration is not working.

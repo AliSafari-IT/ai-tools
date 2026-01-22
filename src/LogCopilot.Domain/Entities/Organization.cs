@@ -12,6 +12,15 @@ public class Organization
     public Guid CreatedBy { get; set; }
     public Guid UpdatedBy { get; set; }
 
+    public Guid? BillingPlanId { get; set; }
+    public BillingPlan? BillingPlan { get; set; }
+    public DateTime? SubscriptionStartDate { get; set; }
+    public bool IsTrial { get; set; }
+    public DateTime? TrialEndsAt { get; set; }
+    public int CurrentMonthUploadCount { get; set; }
+    public DateTime LastUploadCountReset { get; set; }
+    public long CurrentStorageBytes { get; set; }
+
     public ICollection<OrganizationMember> Members { get; set; } = new List<OrganizationMember>();
     public ICollection<UploadSession> UploadSessions { get; set; } = new List<UploadSession>();
     public ICollection<LogSource> LogSources { get; set; } = new List<LogSource>();

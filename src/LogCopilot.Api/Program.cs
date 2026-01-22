@@ -1,4 +1,5 @@
 using System.Text;
+using DotNetEnv;
 using LogCopilot.Application.Interfaces;
 using LogCopilot.Infrastructure.AI;
 using LogCopilot.Infrastructure.Clustering;
@@ -17,9 +18,14 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load .env file
+Env.Load();
+
+builder.Configuration.AddEnvironmentVariables();
+
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File("logs/lc_.log", rollingInterval: RollingInterval.Hour)
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -53,6 +59,8 @@ builder.Services.AddScoped<IIngestionService, IngestionService>();
 builder.Services.AddScoped<IClusterService, ClusterService>();
 builder.Services.AddScoped<ITraceService, TraceService>();
 builder.Services.AddScoped<IIncidentReportService, IncidentReportService>();
+builder.Services.AddScoped<IBillingService, BillingService>();
+builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
 builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
 builder.Services.AddScoped<ClusteringService>();
 builder.Services.AddScoped<TraceBuilder>();
@@ -76,7 +84,9 @@ builder.Services.AddSingleton<IFeatureFlagService, FeatureFlagService>();
 var featureFlags = new FeatureFlagService(builder.Configuration);
 var proEnabled = featureFlags.IsEnabled("ProEnabled");
 var licenseKey =
-    builder.Configuration["LICENSE_KEY"] ?? Environment.GetEnvironmentVariable("LICENSE_KEY");
+    builder.Configuration["License:Key"]
+    ?? builder.Configuration["LICENSE_KEY"]
+    ?? Environment.GetEnvironmentVariable("LICENSE_KEY");
 var hasValidLicense =
     !string.IsNullOrEmpty(licenseKey)
     && licenseKey.StartsWith("LC-PRO-")
@@ -85,7 +95,7 @@ var hasValidLicense =
 if (proEnabled && hasValidLicense)
 {
     builder.Services.AddSingleton<ILicenseVerifier, ProLicenseVerifier>();
-    builder.Services.AddScoped<IIncidentNarrativeGenerator, OpenAiNarrativeGenerator>();
+    builder.Services.AddScoped<IIncidentNarrativeGenerator, ProviderAwareNarrativeGenerator>();
 }
 else
 {
@@ -121,6 +131,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseMiddleware<LogCopilot.Infrastructure.Middleware.ApiKeyAuthenticationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -131,10 +142,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         await db.Database.MigrateAsync();
+        await BillingPlanSeeder.SeedBillingPlansAsync(db);
     }
     catch (Exception ex)
     {
-        Log.Error(ex, "Error running migrations");
+        Log.Error(ex, "Error running migrations or seeding");
     }
 }
 

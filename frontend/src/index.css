@@ -1,24 +1,34 @@
 @import "@asafarim/design-tokens/css";
+@import '@asafarim/progress-bars/dist/style.css';
 
-* {
-  box-sizing: border-box;
+html,
+body {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
 body {
-  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--asm-color-app-bg, var(--asm-color-surface-muted, #0b2a2b));
+  color: var(--asm-color-text, #111);
   font-family: var(--asm-font-family-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--asm-color-bg);
-  color: var(--asm-color-text);
-}
-
-code {
-  font-family: 'Courier New', monospace;
 }
 
 #root {
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: initial;
+  font-family: var(--asm-font-family-primary);
 }
+
+* {
+  box-sizing: border-box;
+}
+

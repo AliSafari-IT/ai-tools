@@ -12,7 +12,12 @@ public class IncidentReport
     public string PromptParams { get; set; } = string.Empty;
     public string OutputJson { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
-    public string Provider { get; set; } = "Heuristic";
+    public string Provider { get; set; } = string.Empty;
+    public string Model { get; set; } = string.Empty;
+    public string? RequestedProvider { get; set; }
+    public string? ActualProvider { get; set; }
+    public string? ProviderStatus { get; set; }
+    public string? ProviderErrorSummary { get; set; }
     public string Status { get; set; } = "Completed";
     public int Version { get; set; }
     public DateTime CreatedAt { get; set; }

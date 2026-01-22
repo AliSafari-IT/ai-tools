@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using LogCopilot.Api.Extensions;
 using LogCopilot.Application.DTOs;
 using LogCopilot.Application.Interfaces;
 using LogCopilot.Infrastructure.Utils;
@@ -76,6 +77,86 @@ public class ReportsController : ControllerBase
         {
             _logger.LogError(ex, "Error getting report {ReportId}", id);
             return StatusCode(500, new { message = "Error retrieving report", error = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteReport(Guid id)
+    {
+        try
+        {
+            var organizationId = User.GetOrganizationId();
+            var report = await _reportService.GetReportByIdAsync(id);
+
+            if (report.OrganizationId != organizationId)
+                return NotFound();
+
+            await _reportService.DeleteReportAsync(id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting report {ReportId}", id);
+            return StatusCode(500, new { message = "Error deleting report", error = ex.Message });
+        }
+    }
+
+    [HttpPost("bulk-delete")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> BulkDeleteReports([FromBody] BulkDeleteRequest request)
+    {
+        try
+        {
+            var organizationId = User.GetOrganizationId();
+            var result = await _reportService.BulkDeleteReportsAsync(organizationId, request.Ids);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error bulk deleting reports");
+            return StatusCode(500, new { message = "Error deleting reports", error = ex.Message });
+        }
+    }
+
+    [HttpGet("{id}/ticket")]
+    public async Task<IActionResult> ExportTicket(Guid id, [FromQuery] string target = "github")
+    {
+        try
+        {
+            var report = await _reportService.GetReportByIdAsync(id);
+            var output = report.Output;
+
+            var redactedOutput = new ReportOutput
+            {
+                ExecutiveSummary = RedactionUtility.RedactSensitiveData(output.ExecutiveSummary),
+                Metrics = output.Metrics,
+                TopIssues = output.TopIssues.Select(ti => new TopIssue
+                {
+                    ClusterId = ti.ClusterId,
+                    Title = ti.Title,
+                    Severity = ti.Severity,
+                    Count = ti.Count,
+                    FirstSeen = ti.FirstSeen,
+                    LastSeen = ti.LastSeen,
+                    Evidence = ti.Evidence.Select(e => RedactionUtility.RedactSensitiveData(e)).ToList(),
+                    SuggestedActions = ti.SuggestedActions
+                }).ToList(),
+                RootCauseHypotheses = output.RootCauseHypotheses,
+                RecommendedFixPlan = output.RecommendedFixPlan,
+                ObservabilityGaps = output.ObservabilityGaps,
+                TimelineHighlights = output.TimelineHighlights,
+                Provider = output.Provider
+            };
+
+            var ticket = GenerateTicket(id, redactedOutput, target);
+            var content = Encoding.UTF8.GetBytes(ticket);
+            return File(content, "text/markdown", $"ticket-{id}.md");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error exporting ticket for report {ReportId}", id);
+            return StatusCode(500, new { message = "Error exporting ticket", error = ex.Message });
         }
     }
 
@@ -253,4 +334,95 @@ DELIVERABLE OUTPUT (ONLY)
         var content = Encoding.UTF8.GetBytes(prompt);
         return File(content, "text/plain", $"incident-report-{id}-prompt.txt");
     }
+
+
+    private string GenerateTicket(Guid reportId, ReportOutput output, string target)
+    {
+        var sb = new StringBuilder();
+        var topIssue = output.TopIssues.FirstOrDefault();
+        var title = topIssue?.Title ?? "Log Analysis Issue";
+
+        sb.AppendLine($"# {title}");
+        sb.AppendLine();
+        sb.AppendLine("## Impact Summary");
+        sb.AppendLine(output.ExecutiveSummary);
+        sb.AppendLine();
+        sb.AppendLine("## Evidence");
+        sb.AppendLine($"- **Total Events**: {output.Metrics.TotalEvents}");
+        sb.AppendLine($"- **Errors**: {output.Metrics.ErrorCount}");
+        sb.AppendLine($"- **Fatal Events**: {output.Metrics.FatalCount}");
+        sb.AppendLine($"- **Warnings**: {output.Metrics.WarningCount}");
+        sb.AppendLine($"- **Duration**: {output.Metrics.DurationHours:F1} hours");
+        sb.AppendLine($"- **Time Range**: {output.Metrics.FirstSeen:O} to {output.Metrics.LastSeen:O}");
+        sb.AppendLine();
+
+        if (topIssue != null)
+        {
+            sb.AppendLine("## Top Issue Details");
+            sb.AppendLine($"- **Severity**: {topIssue.Severity}");
+            sb.AppendLine($"- **Occurrences**: {topIssue.Count}");
+            sb.AppendLine($"- **First Seen**: {topIssue.FirstSeen:O}");
+            sb.AppendLine($"- **Last Seen**: {topIssue.LastSeen:O}");
+            sb.AppendLine();
+            sb.AppendLine("### Evidence");
+            foreach (var evidence in topIssue.Evidence.Take(3))
+            {
+                sb.AppendLine($"- {evidence}");
+            }
+            sb.AppendLine();
+        }
+
+        if (output.RootCauseHypotheses.Any())
+        {
+            sb.AppendLine("## Suspected Root Cause");
+            foreach (var hypothesis in output.RootCauseHypotheses.Take(2))
+            {
+                sb.AppendLine($"- **{hypothesis.Issue}**: {hypothesis.LikelyCause} (Confidence: {hypothesis.Confidence})");
+            }
+            sb.AppendLine();
+        }
+
+        if (output.RecommendedFixPlan.Any())
+        {
+            sb.AppendLine("## Fix Plan");
+            foreach (var task in output.RecommendedFixPlan.Take(5))
+            {
+                sb.AppendLine($"- [ ] **[{task.Priority}]** {task.Task}: {task.WhatToChange}");
+                sb.AppendLine($"  - Risk: {task.RiskImpact}");
+                sb.AppendLine($"  - Verify: {task.HowToVerify}");
+            }
+            sb.AppendLine();
+        }
+
+        sb.AppendLine("## Acceptance Criteria");
+        sb.AppendLine("- [ ] All identified errors resolved");
+        sb.AppendLine("- [ ] System health status improved to HEALTHY");
+        sb.AppendLine("- [ ] No regressions in existing functionality");
+        sb.AppendLine("- [ ] Monitoring confirms issue is fixed");
+        sb.AppendLine();
+
+        sb.AppendLine("## How to Verify");
+        sb.AppendLine("1. Deploy the fix to staging environment");
+        sb.AppendLine("2. Run the same log analysis query to confirm error count decreased");
+        sb.AppendLine("3. Monitor production metrics for 24 hours");
+        sb.AppendLine("4. Confirm no new related errors appear");
+        sb.AppendLine();
+
+        sb.AppendLine($"**Report ID**: {reportId}");
+        sb.AppendLine($"**Provider**: {output.Provider}");
+        sb.AppendLine($"**Generated**: {DateTime.UtcNow:O}");
+
+        return sb.ToString();
+    }
+}
+
+public class BulkDeleteRequest
+{
+    public Guid[] Ids { get; set; } = Array.Empty<Guid>();
+}
+
+public class BulkDeleteResult
+{
+    public int DeletedCount { get; set; }
+    public Guid[] NotFoundIds { get; set; } = Array.Empty<Guid>();
 }

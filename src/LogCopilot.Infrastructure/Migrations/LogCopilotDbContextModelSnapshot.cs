@@ -60,6 +60,10 @@ namespace LogCopilot.Infrastructure.Migrations
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Scopes")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -90,6 +94,12 @@ namespace LogCopilot.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("EnablesAiReports")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("EnablesSemanticClustering")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -251,6 +261,9 @@ namespace LogCopilot.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ActualProvider")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("ClusterId")
                         .HasColumnType("uuid");
 
@@ -259,6 +272,10 @@ namespace LogCopilot.Infrastructure.Migrations
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uuid");
@@ -273,6 +290,15 @@ namespace LogCopilot.Infrastructure.Migrations
 
                     b.Property<string>("Provider")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderErrorSummary")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderStatus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestedProvider")
                         .HasColumnType("text");
 
                     b.Property<int>("Scope")
@@ -584,11 +610,20 @@ namespace LogCopilot.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BillingPlanId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("CurrentMonthUploadCount")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("CurrentStorageBytes")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -600,10 +635,22 @@ namespace LogCopilot.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsTrial")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUploadCountReset")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("SubscriptionStartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("TrialEndsAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -612,6 +659,8 @@ namespace LogCopilot.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillingPlanId");
 
                     b.HasIndex("IsDeleted");
 
@@ -1068,6 +1117,15 @@ namespace LogCopilot.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("LogCopilot.Domain.Entities.Organization", b =>
+                {
+                    b.HasOne("LogCopilot.Domain.Entities.BillingPlan", "BillingPlan")
+                        .WithMany()
+                        .HasForeignKey("BillingPlanId");
+
+                    b.Navigation("BillingPlan");
                 });
 
             modelBuilder.Entity("LogCopilot.Domain.Entities.OrganizationMember", b =>

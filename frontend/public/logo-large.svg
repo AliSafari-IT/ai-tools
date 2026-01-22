@@ -1,0 +1,61 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:var(--asm-color-brand-primary-500);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:var(--asm-color-brand-primary-600);stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="logGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:var(--asm-color-success-500);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:var(--asm-color-success-600);stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Main circle background with shadow -->
+  <circle cx="60" cy="60" r="55" fill="url(#bgGradientLarge)" stroke="var(--asm-color-brand-primary-500)" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Log lines representing data flow -->
+  <g opacity="0.9">
+    <!-- First log line -->
+    <rect x="25" y="35" width="70" height="6" rx="3" fill="url(#logGradientLarge)">
+      <animate attributeName="width" values="0;70;70" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Second log line -->
+    <rect x="25" y="48" width="55" height="6" rx="3" fill="url(#logGradientLarge)">
+      <animate attributeName="width" values="0;55;55" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Third log line -->
+    <rect x="25" y="61" width="65" height="6" rx="3" fill="url(#logGradientLarge)">
+      <animate attributeName="width" values="0;65;65" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Fourth log line -->
+    <rect x="25" y="74" width="50" height="6" rx="3" fill="url(#logGradientLarge)">
+      <animate attributeName="width" values="0;50;50" dur="2s" begin="0.9s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  
+  <!-- Copilot/aircraft symbol -->
+  <g transform="translate(60, 60)">
+    <!-- Simple aircraft/paper plane shape -->
+    <path d="M -12 -6 L 12 0 L -12 6 L -6 0 Z" fill="var(--asm-color-surface)" opacity="0.9">
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0,0; 0,-2; 0,0"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Pulse effect for active monitoring -->
+  <circle cx="60" cy="60" r="55" fill="none" stroke="var(--asm-color-success-500)" stroke-width="2" opacity="0">
+    <animate attributeName="r" values="55;70;55" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

@@ -1,78 +1,51 @@
-# Log Copilot Community License (LCCL) v1.0
+LOG COPILOT COMMUNITY LICENSE (LC-CL) v1.0
 
-Copyright (c) 2026 Ali Safari / ASafariM
+Copyright (c) 2026 Ali Safari
 All rights reserved.
 
-This License applies to the Log Copilot Community Edition source code and related materials
-made available in this repository (the “Software”), excluding any “Pro Edition” modules or
-other components provided under separate commercial terms.
+1. Grant of Rights
+Subject to the terms below, you are granted a non-exclusive, worldwide, royalty-free license to:
+(a) use, run, and evaluate the Software;
+(b) reproduce the Software for internal use;
+(c) modify the Software for internal use; and
+(d) distribute unmodified copies of the Software solely for the purpose of evaluation.
 
-1. Definitions
-1.1 “You” means any individual or legal entity exercising permissions granted by this License.
-1.2 “Managed Service” means providing the Software (or a substantial portion of its functionality)
-    to third parties as a hosted service, SaaS offering, or similar service where third parties
-    can access the Software’s functionality over a network.
-1.3 “Pro Features” means functionality designated as Pro/Commercial, including but not limited to
-    premium plugins, license-gated features, and integrations not distributed under this License.
+2. Restrictions
+You may NOT, without a separate written commercial agreement from the Licensor:
+(a) offer the Software (or a modified version) as a hosted service, SaaS, or managed service;
+(b) sell, sublicense, or commercially distribute the Software or modified versions;
+(c) distribute modified versions of the Software;
+(d) remove or bypass any license checks, feature gates, or “Pro” capability restrictions;
+(e) use the Software to create or offer a competing product whose primary purpose is log analysis + incident reporting;
+(f) remove copyright, trademark, or attribution notices.
 
-2. License Grant
-Subject to the terms and limitations of this License, the Licensor grants You a non-exclusive,
-worldwide, royalty-free, revocable license to:
-(a) use the Software for internal purposes;
-(b) copy and run the Software;
-(c) modify the Software and create derivative works; and
-(d) redistribute the Software (modified or unmodified) to others,
-provided that You comply with Section 3 (Conditions) and Section 4 (Limitations).
+3. Pro Edition / Plugins
+Certain features may be designated “Pro” and may require a commercial license key.
+Pro plugins and any separately provided proprietary modules are NOT licensed under this license unless explicitly stated.
 
-3. Conditions
-3.1 Notices. You must retain all copyright, trademark, attribution, and license notices
-    in the Software.
-3.2 License Copy. If You redistribute the Software (modified or unmodified), You must include
-    a copy of this License with the distribution.
-3.3 Marking Changes. If You distribute a modified version, You must clearly indicate that You
-    changed the Software and provide a date of change in a NOTICE file or equivalent.
+4. Contributions
+If you submit code, fixes, or enhancements to the Licensor (e.g., via pull request, patch, or otherwise),
+you grant the Licensor a perpetual, worldwide, royalty-free, irrevocable license to use, modify, relicense,
+and distribute your contribution as part of the Software under any terms.
 
-4. Limitations (What You May Not Do)
-4.1 No Managed Service. You may not provide the Software as a Managed Service, in whole or in part.
-    This restriction includes offering Log Copilot as a hosted log analysis product for third parties,
-    whether paid or free.
-4.2 No Circumvention. You may not bypass, disable, remove, or circumvent any license checks,
-    feature flags, usage limits, or access controls that gate Pro Features or commercial functionality.
-4.3 No Pro Features Redistribution. Pro Features are not licensed under this License. You may not
-    distribute Pro Features unless You have a separate written commercial agreement with the Licensor.
-4.4 No Sale of the Software Itself. You may not sell, license, or commercially distribute the Software
-    as a standalone product where the primary value is the Software itself, without a separate written
-    commercial agreement. This does not prevent You from using the Software internally within a business.
-4.5 Trademarks. This License does not grant any rights to use the Licensor’s trademarks, service marks,
-    or logos, including “Log Copilot” or “ASafariM”, except as reasonably necessary to describe the
-    origin of the Software and reproduce notices.
-4.6 Illegal Use. You may not use the Software in violation of applicable law.
+5. Trademarks
+“Log Copilot” and related marks are trademarks of the Licensor. This license does not grant trademark rights.
 
-5. Contributions
-Unless You and the Licensor agree otherwise in writing, any contribution intentionally submitted
-for inclusion in the Software may be used, modified, and redistributed by the Licensor under the
-Licensor’s chosen terms (including this License and/or commercial terms), without additional
-compensation to You. You represent that You have the right to submit the contribution.
+6. No Warranty
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
-6. Termination
-This License is effective until terminated. Your rights under this License automatically terminate
-if You breach any term of this License. Upon termination, You must cease using and distributing
-the Software. Sections 5, 7, and 8 survive termination.
+7. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-7. Disclaimer of Warranty
-THE SOFTWARE IS PROVIDED “AS IS” AND “AS AVAILABLE”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
-NON-INFRINGEMENT, AND TITLE. YOU BEAR THE RISK OF USING IT.
+8. Termination
+Any breach of this license immediately terminates your rights. Upon termination, you must cease use and
+destroy all copies in your possession, except as required by law.
 
-8. Limitation of Liability
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL THE LICENSOR BE LIABLE FOR ANY INDIRECT,
-INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, OR FOR ANY LOSS OF PROFITS, DATA, OR
-BUSINESS INTERRUPTION, ARISING OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THIS LICENSE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE LICENSOR’S TOTAL LIABILITY SHALL NOT EXCEED EUR 100.
+9. Commercial Licensing
+For commercial distribution, hosting, managed service use, or Pro features, contact the Licensor:
+Ali Safari (asafarim.com / asafarim.be)
 
-9. Commercial Licensing / Pro Edition
-If You want to (a) offer the Software as a Managed Service, (b) redistribute Pro Features, or
-(c) obtain a commercial license for Pro/Enterprise use cases, contact the Licensor for a separate
-commercial agreement.
-
-End of License.
+END OF TERMS

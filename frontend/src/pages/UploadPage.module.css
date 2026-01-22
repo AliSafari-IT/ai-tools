@@ -1,0 +1,329 @@
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--asm-space-4);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: var(--asm-space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: var(--asm-space-8);
+  }
+}
+
+.container h1 {
+  font-size: 1.5rem;
+  margin-bottom: var(--asm-space-xs);
+  color: var(--asm-color-text);
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .container h1 {
+    font-size: 1.75rem;
+  }
+}
+
+.subtitle {
+  color: var(--asm-color-text-muted);
+  margin-bottom: var(--asm-space-6);
+  font-size: var(--asm-font-size-sm);
+}
+
+.uploadSection {
+  margin-bottom: var(--asm-space-12);
+}
+
+.uploadBox {
+  position: relative;
+  border: 2px dashed var(--asm-color-border);
+  border-radius: var(--asm-radius-md);
+  padding: var(--asm-space-12);
+  text-align: center;
+  background: var(--asm-color-surface);
+  transition: all 0.3s ease;
+}
+
+.uploadBox:hover {
+  border-color: var(--asm-color-primary);
+  background: var(--asm-color-surface-hover);
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--asm-space-4);
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 3rem;
+}
+
+.text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--asm-color-text);
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--asm-color-text-muted);
+}
+
+.jobsSection {
+  margin-top: var(--asm-space-12);
+}
+
+.jobsSection h2 {
+  font-size: 1.25rem;
+  margin-bottom: var(--asm-space-6);
+  color: var(--asm-color-text);
+}
+
+.empty {
+  text-align: center;
+  padding: var(--asm-space-12);
+  color: var(--asm-color-text-muted);
+  font-size: 1rem;
+}
+
+.jobsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--asm-space-4);
+}
+
+.jobCard {
+  background: var(--asm-color-surface);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-md);
+  padding: var(--asm-space-6);
+  transition: all 0.3s ease;
+  box-shadow: var(--asm-effect-shadow-sm);
+}
+
+.jobCard.pending {
+  border-left: 4px solid var(--asm-color-warning);
+}
+
+.jobCard.running {
+  border-left: 4px solid var(--asm-color-primary);
+  background: var(--asm-color-surface-hover);
+}
+
+.jobCard.completed {
+  border-left: 4px solid var(--asm-color-success);
+  background: var(--asm-color-success-light);
+}
+
+.jobCard.cancelled {
+  border-left: 4px solid var(--asm-color-warning);
+  background: var(--asm-color-warning-light);
+}
+
+.jobCard.failed {
+  border-left: 4px solid var(--asm-color-error);
+  background: var(--asm-color-error-light);
+}
+
+.jobHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--asm-space-4);
+}
+
+.fileName {
+  font-weight: 500;
+  color: var(--asm-color-text);
+  flex: 1;
+  word-break: break-word;
+}
+
+.status {
+  padding: var(--asm-space-xs) var(--asm-space-2);
+  border-radius: var(--asm-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: var(--asm-space-4);
+  color: white;
+}
+
+.status.pending {
+  background: var(--asm-color-warning);
+}
+
+.status.running {
+  background: var(--asm-color-primary);
+}
+
+.status.completed {
+  background: var(--asm-color-success);
+}
+
+.status.cancelled {
+  background: var(--asm-color-warning);
+}
+
+.status.failed {
+  background: var(--asm-color-error);
+}
+
+.progressContainer {
+  margin-bottom: var(--asm-space-4);
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: var(--asm-color-surface-hover);
+  border-radius: var(--asm-radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--asm-space-xs);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--asm-color-primary), var(--asm-color-primary-dark));
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  font-size: 0.75rem;
+  color: var(--asm-color-text-muted);
+}
+
+.cancelBtn {
+  padding: var(--asm-space-xs) var(--asm-space-4);
+  background-color: var(--asm-color-error);
+  color: white;
+  border: none;
+  border-radius: var(--asm-radius-sm);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.cancelBtn:hover {
+  background-color: var(--asm-color-error-dark);
+}
+
+.error {
+  margin-top: var(--asm-space-4);
+  padding: var(--asm-space-2);
+  background: var(--asm-color-error-light);
+  color: var(--asm-color-error);
+  border-left: 3px solid var(--asm-color-error);
+  border-radius: var(--asm-radius-sm);
+  font-size: 0.8125rem;
+}
+
+.nextSteps {
+  margin: var(--asm-space-6) 0;
+  padding: var(--asm-space-6);
+  background: var(--asm-color-surface);
+  border-radius: var(--asm-radius-lg);
+  border: 2px solid var(--asm-color-success);
+}
+
+.successBanner {
+  display: flex;
+  align-items: center;
+  gap: var(--asm-space-3);
+  padding: var(--asm-space-4);
+  background: var(--asm-color-success-light);
+  color: var(--asm-color-success);
+  border-radius: var(--asm-radius-md);
+  font-weight: 600;
+  margin-bottom: var(--asm-space-4);
+}
+
+.successIcon {
+  font-size: 1.5rem;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--asm-space-3);
+}
+
+@media (min-width: 480px) {
+  .actionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .actionsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+.actionBtn,
+.actionBtnPrimary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--asm-space-2);
+  padding: var(--asm-space-4);
+  background: var(--asm-color-surface);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-md);
+  text-decoration: none;
+  color: var(--asm-color-text);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 0.875rem;
+  touch-action: manipulation;
+  min-height: 100px;
+}
+
+.actionBtn:hover {
+  background: var(--asm-color-surface-hover);
+  border-color: var(--asm-color-primary);
+  transform: translateY(-2px);
+}
+
+.actionBtn:active {
+  transform: translateY(0);
+}
+
+.actionBtnPrimary {
+  background: var(--asm-color-primary);
+  color: white;
+  border-color: var(--asm-color-primary);
+}
+
+.actionBtnPrimary:hover {
+  background: var(--asm-color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.actionBtnPrimary:active {
+  transform: translateY(0);
+}
+
+.actionIcon {
+  font-size: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .actionIcon {
+    font-size: 2rem;
+  }
+}

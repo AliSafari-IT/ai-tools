@@ -21,6 +21,7 @@ public class IngestionService : IIngestionService
     private readonly ILogger<IngestionService> _logger;
     private readonly ClusteringService _clusteringService;
     private readonly TraceBuilder _traceBuilder;
+    private readonly Dictionary<Guid, CancellationTokenSource> _cancellationTokens = new();
 
     public IngestionService(
         LogCopilotDbContext context,
@@ -36,7 +37,7 @@ public class IngestionService : IIngestionService
         _traceBuilder = traceBuilder;
     }
 
-    public async Task ProcessIngestionJobAsync(Guid jobId)
+    public async Task ProcessIngestionJobAsync(Guid jobId, CancellationToken cancellationToken = default)
     {
         var job = await _context.IngestionJobs
             .Include(j => j.UploadSession)
@@ -47,6 +48,9 @@ public class IngestionService : IIngestionService
             _logger.LogWarning("Ingestion job {JobId} not found", jobId);
             return;
         }
+
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        _cancellationTokens[jobId] = cts;
 
         try
         {
@@ -79,6 +83,8 @@ public class IngestionService : IIngestionService
 
             foreach (var parsedEvent in events)
             {
+                cts.Token.ThrowIfCancellationRequested();
+
                 try
                 {
                     await ProcessParsedEventAsync(parsedEvent, job);
@@ -96,6 +102,13 @@ public class IngestionService : IIngestionService
             job.Status = IngestionJobStatus.Completed;
             job.CompletedAt = DateTime.UtcNow;
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Ingestion job {JobId} was cancelled", jobId);
+            job.Status = IngestionJobStatus.Cancelled;
+            job.ErrorMessage = "Job was cancelled by user";
+            job.CompletedAt = DateTime.UtcNow;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ingestion job {JobId} failed", jobId);
@@ -103,8 +116,28 @@ public class IngestionService : IIngestionService
             job.ErrorMessage = ex.Message;
             job.CompletedAt = DateTime.UtcNow;
         }
+        finally
+        {
+            _cancellationTokens.Remove(jobId);
+            cts.Dispose();
+        }
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task CancelIngestionJobAsync(Guid jobId)
+    {
+        if (_cancellationTokens.TryGetValue(jobId, out var cts))
+        {
+            _logger.LogInformation("Cancelling ingestion job {JobId}", jobId);
+            cts.Cancel();
+        }
+        else
+        {
+            _logger.LogWarning("Ingestion job {JobId} not found or already completed", jobId);
+        }
+
+        await Task.CompletedTask;
     }
 
     private async Task ProcessParsedEventAsync(Parsers.Models.ParsedLogEvent parsedEvent, IngestionJob job)

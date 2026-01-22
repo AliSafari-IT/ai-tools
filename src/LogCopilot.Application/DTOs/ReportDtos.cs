@@ -20,6 +20,7 @@ public class IncidentReportDto
 public class IncidentReportDetailDto
 {
     public Guid Id { get; set; }
+    public Guid OrganizationId { get; set; }
     public string Scope { get; set; } = string.Empty;
     public Guid? ClusterId { get; set; }
     public Guid? TraceId { get; set; }
@@ -39,6 +40,10 @@ public class ReportOutput
     public List<string> ObservabilityGaps { get; set; } = new();
     public List<TimelineHighlight> TimelineHighlights { get; set; } = new();
     public string Provider { get; set; } = "Heuristic";
+    public string? RequestedProvider { get; set; }
+    public string? ActualProvider { get; set; }
+    public string? ProviderStatus { get; set; }
+    public string? ProviderErrorSummary { get; set; }
 }
 
 public class ReportMetrics

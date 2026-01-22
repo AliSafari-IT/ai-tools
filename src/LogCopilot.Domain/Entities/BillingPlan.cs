@@ -9,6 +9,8 @@ public class BillingPlan
     public int MaxUsers { get; set; }
     public long MaxStorageBytes { get; set; }
     public int MaxUploadSessionsPerMonth { get; set; }
+    public bool EnablesAiReports { get; set; }
+    public bool EnablesSemanticClustering { get; set; }
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

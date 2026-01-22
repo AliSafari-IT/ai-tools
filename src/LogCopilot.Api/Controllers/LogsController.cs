@@ -242,6 +242,38 @@ public class LogsController : ControllerBase
         });
     }
 
+    [HttpPost("cancel/{jobId}")]
+    public async Task<IActionResult> CancelIngestionJob(Guid jobId)
+    {
+        try
+        {
+            var organizationId = User.FindFirst("OrganizationId")?.Value;
+            if (string.IsNullOrEmpty(organizationId))
+                return Unauthorized(new { message = "Organization ID not found in token" });
+
+            var orgGuid = Guid.Parse(organizationId);
+
+            var job = await _context.IngestionJobs
+                .FirstOrDefaultAsync(j => j.Id == jobId && j.OrganizationId == orgGuid);
+
+            if (job == null)
+                return NotFound(new { message = "Ingestion job not found" });
+
+            if (job.Status != IngestionJobStatus.Pending && job.Status != IngestionJobStatus.Running)
+                return BadRequest(new { message = $"Cannot cancel job with status {job.Status}" });
+
+            var ingestionService = HttpContext.RequestServices.GetRequiredService<IIngestionService>();
+            await ingestionService.CancelIngestionJobAsync(jobId);
+
+            return Ok(new { message = "Cancellation requested for ingestion job", jobId });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to cancel ingestion job");
+            return StatusCode(500, new { message = "Failed to cancel ingestion job", error = ex.Message });
+        }
+    }
+
     [HttpGet("status/{sessionId}")]
     public async Task<IActionResult> GetStatus(Guid sessionId)
     {

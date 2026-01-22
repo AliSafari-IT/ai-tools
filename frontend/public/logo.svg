@@ -1,0 +1,58 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="logGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main circle background -->
+  <circle cx="16" cy="16" r="15" fill="url(#bgGradient)" stroke="#3b82f6" stroke-width="1"/>
+  
+  <!-- Log lines representing data flow -->
+  <g opacity="0.9">
+    <!-- First log line -->
+    <rect x="6" y="8" width="20" height="2" rx="1" fill="url(#logGradient)">
+      <animate attributeName="width" values="0;20;20" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Second log line -->
+    <rect x="6" y="12" width="16" height="2" rx="1" fill="url(#logGradient)">
+      <animate attributeName="width" values="0;16;16" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Third log line -->
+    <rect x="6" y="16" width="18" height="2" rx="1" fill="url(#logGradient)">
+      <animate attributeName="width" values="0;18;18" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Fourth log line -->
+    <rect x="6" y="20" width="14" height="2" rx="1" fill="url(#logGradient)">
+      <animate attributeName="width" values="0;14;14" dur="2s" begin="0.9s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  
+  <!-- Copilot/aircraft symbol -->
+  <g transform="translate(16, 16)">
+    <!-- Simple aircraft/paper plane shape -->
+    <path d="M -4 -2 L 4 0 L -4 2 L -2 0 Z" fill="#ffffff" opacity="0.8">
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0,0; 0,-1; 0,0"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Pulse effect for active monitoring -->
+  <circle cx="16" cy="16" r="15" fill="none" stroke="#10b981" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="15;20;15" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

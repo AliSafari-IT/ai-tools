@@ -27,7 +27,6 @@ export default function LogsPage() {
       setLoading(true)
       setError(null)
       try {
-        console.log('Fetching logs with params:', { skip, take, search, level })
         const response = await api.get('/logs', {
           params: {
             skip,
@@ -36,7 +35,6 @@ export default function LogsPage() {
             level: level !== 'All Levels' ? level : undefined,
           },
         })
-        console.log('Logs response:', response.data)
         setLogs(response.data.logs)
         setTotal(response.data.total)
       } catch (err) {
@@ -64,6 +62,18 @@ export default function LogsPage() {
     return new Date(timestamp).toLocaleString()
   }
 
+  const getLevelBadgeClass = (lvl: string) => {
+    const l = (lvl || '').toLowerCase()
+    if (l === 'error') return styles.levelError
+    if (l === 'fatal') return styles.levelFatal
+    if (l === 'warning') return styles.levelWarning
+    if (l === 'information') return styles.levelInformation
+    if (l === 'info') return styles.levelInfo
+    if (l === 'debug') return styles.levelDebug
+    if (l === 'verbose') return styles.levelVerbose
+    return styles.levelDebug
+  }
+
   return (
     <div className={styles.container}>
       <h1>Log Explorer</h1>
@@ -72,12 +82,19 @@ export default function LogsPage() {
       <div className={styles.filters}>
         <input
           type="text"
+          name="search"
+          id="search"
           placeholder="Search logs..."
           className={styles.searchInput}
           value={search}
           onChange={handleSearch}
         />
-        <select className={styles.select} value={level} onChange={handleLevelChange}>
+        <select
+          name="level"
+          id="level"
+          className={styles.select}
+          value={level}
+          onChange={handleLevelChange}>
           <option>All Levels</option>
           <option>Error</option>
           <option>Warning</option>
@@ -92,43 +109,58 @@ export default function LogsPage() {
         {loading ? (
           <p style={{ padding: '1rem', textAlign: 'center' }}>Loading logs...</p>
         ) : error ? (
-          <p style={{ padding: '1rem', textAlign: 'center', color: 'var(--asm-color-semantic-error)' }}>
+          <p style={{ padding: '1rem', textAlign: 'center', color: 'var(--asm-color-error)' }}>
             Error: {error}
           </p>
         ) : (
           <>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Level</th>
-                  <th>Message</th>
-                  <th>Source</th>
-                  <th>Trace ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.length === 0 ? (
+            <div className={styles.tableWrapper}>
+              <table className={`${styles.table} ${styles.tableResponsive}`}>
+                <thead>
                   <tr>
-                    <td colSpan={5} className={styles.empty}>
-                      No logs found
-                    </td>
+                    <th>Timestamp</th>
+                    <th>Level</th>
+                    <th>Message</th>
+                    <th>Source</th>
+                    <th>Trace ID</th>
                   </tr>
-                ) : (
-                  logs.map((log) => (
-                    <tr key={log.id}>
-                      <td>{formatTimestamp(log.timestamp)}</td>
-                      <td>{log.level}</td>
-                      <td>{log.message}</td>
-                      <td>{log.source}</td>
-                      <td>{log.traceId || '-'}</td>
+                </thead>
+                <tbody>
+                  {logs.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className={styles.empty}>
+                        No logs found
+                      </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    logs.map((log) => (
+                      <tr key={log.id}>
+                        <td data-label="Timestamp" className={styles.cellNowrap}>
+                          {formatTimestamp(log.timestamp)}
+                        </td>
+                        <td data-label="Level">
+                          <span className={`${styles.levelBadge} ${getLevelBadgeClass(log.level)}`}>
+                            {log.level}
+                          </span>
+                        </td>
+                        <td data-label="Message" className={styles.cellClamp2}>
+                          {log.message}
+                        </td>
+                        <td data-label="Source" className={styles.cellMono}>
+                          {log.source}
+                        </td>
+                        <td data-label="Trace ID" className={styles.cellMono}>
+                          {log.traceId || '-'}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
             {logs.length > 0 && (
-              <div style={{ padding: '1rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--asm-color-text-secondary)' }}>
+              <div style={{ padding: '1rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--asm-color-text-muted)' }}>
                 Showing {skip + 1}-{Math.min(skip + take, total)} of {total} logs
               </div>
             )}

@@ -1,0 +1,100 @@
+.container {
+  margin: var(--asm-space-4) 0;
+  padding: var(--asm-space-4);
+  background: var(--asm-color-surface-muted);
+  border-radius: var(--asm-radius-md);
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-600);
+  color: var(--asm-color-text);
+  margin-bottom: var(--asm-space-2);
+}
+
+.progressSection {
+  margin-bottom: var(--asm-space-4);
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: var(--asm-space-2);
+  margin-bottom: var(--asm-space-2);
+}
+
+.progressRow .linear-progress {
+  flex: 1;
+}
+
+.progressRow .spinner {
+  flex-shrink: 0;
+}
+
+.percentage {
+  font-weight: var(--asm-font-weight-600);
+  color: var(--asm-color-primary-500);
+}
+
+.progressBarWrapper {
+  width: 100%;
+  height: 8px;
+  background: var(--asm-color-surface);
+  border-radius: var(--asm-radius-sm);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--asm-color-primary-500);
+  transition: width var(--asm-motion-duration-normal);
+}
+
+.diagnostics {
+  display: flex;
+  gap: var(--asm-space-4);
+  margin-top: var(--asm-space-2);
+  font-size: var(--asm-font-size-xs);
+  color: var(--asm-color-text-muted);
+}
+
+.error {
+  padding: var(--asm-space-3);
+  background: var(--asm-color-danger-50);
+  color: var(--asm-color-danger-700);
+  border-radius: var(--asm-radius-sm);
+  font-size: var(--asm-font-size-sm);
+  border: 1px solid var(--asm-color-danger-200);
+}
+
+.levelError {
+  background-color: var(--asm-color-danger-50);
+  color: var(--asm-color-danger-700);
+  border: 1px solid var(--asm-color-danger-200);
+}
+
+.levelWarning {
+  background-color: var(--asm-color-warning-50);
+  color: var(--asm-color-warning-700);
+  border: 1px solid var(--asm-color-warning-200);
+}
+
+.levelInfo {
+  background-color: var(--asm-color-info-50);
+  color: var(--asm-color-info-700);
+  border: 1px solid var(--asm-color-info-200);
+}
+
+.levelDebug {
+  background-color: var(--asm-color-surface-muted);
+  color: var(--asm-color-text-muted);
+  border: 1px solid var(--asm-color-border);
+}
+
+.levelVerbose {
+  background-color: var(--asm-color-surface-muted);
+  color: var(--asm-color-text-muted);
+  border: 1px solid var(--asm-color-border);
+}

@@ -36,7 +36,7 @@ public class AuthService : IAuthService
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             CreatedBy = Guid.Empty,
-            UpdatedBy = Guid.Empty
+            UpdatedBy = Guid.Empty,
         };
 
         var user = new User
@@ -47,7 +47,7 @@ public class AuthService : IAuthService
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
         };
 
         organization.CreatedBy = user.Id;
@@ -65,7 +65,7 @@ public class AuthService : IAuthService
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             CreatedBy = user.Id,
-            UpdatedBy = user.Id
+            UpdatedBy = user.Id,
         };
 
         _context.OrganizationMembers.Add(membership);
@@ -84,13 +84,9 @@ public class AuthService : IAuthService
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Role = "Admin"
+                Role = "Admin",
             },
-            Organization = new OrganizationDto
-            {
-                Id = organization.Id,
-                Name = organization.Name
-            }
+            Organization = new OrganizationDto { Id = organization.Id, Name = organization.Name },
         };
     }
 
@@ -100,8 +96,8 @@ public class AuthService : IAuthService
         if (user == null || !VerifyPassword(dto.Password, user.PasswordHash))
             throw new UnauthorizedAccessException("Invalid email or password");
 
-        var membership = await _context.OrganizationMembers
-            .Include(m => m.Organization)
+        var membership = await _context
+            .OrganizationMembers.Include(m => m.Organization)
             .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
         if (membership == null)
@@ -120,33 +116,39 @@ public class AuthService : IAuthService
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Role = membership.Role.ToString()
+                Role = membership.Role.ToString(),
             },
             Organization = new OrganizationDto
             {
                 Id = membership.Organization.Id,
-                Name = membership.Organization.Name
-            }
+                Name = membership.Organization.Name,
+            },
         };
     }
 
     public async Task<AuthResultDto> RefreshTokenAsync(string refreshToken)
     {
-        var token = await _context.RefreshTokens
-            .Include(rt => rt.User)
-            .FirstOrDefaultAsync(rt => rt.Token == refreshToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow);
+        var token = await _context
+            .RefreshTokens.Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt =>
+                rt.Token == refreshToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow
+            );
 
         if (token == null)
             throw new UnauthorizedAccessException("Invalid or expired refresh token");
 
-        var membership = await _context.OrganizationMembers
-            .Include(m => m.Organization)
+        var membership = await _context
+            .OrganizationMembers.Include(m => m.Organization)
             .FirstOrDefaultAsync(m => m.UserId == token.UserId);
 
         if (membership == null)
             throw new InvalidOperationException("User has no organization membership");
 
-        var accessToken = GenerateAccessToken(token.User.Id, membership.OrganizationId, membership.Role);
+        var accessToken = GenerateAccessToken(
+            token.User.Id,
+            membership.OrganizationId,
+            membership.Role
+        );
         var newRefreshToken = await GenerateAndStoreRefreshTokenAsync(token.UserId);
 
         token.IsRevoked = true;
@@ -162,19 +164,21 @@ public class AuthService : IAuthService
                 Email = token.User.Email,
                 FirstName = token.User.FirstName,
                 LastName = token.User.LastName,
-                Role = membership.Role.ToString()
+                Role = membership.Role.ToString(),
             },
             Organization = new OrganizationDto
             {
                 Id = membership.Organization.Id,
-                Name = membership.Organization.Name
-            }
+                Name = membership.Organization.Name,
+            },
         };
     }
 
     public async Task RevokeTokenAsync(string refreshToken)
     {
-        var token = await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == refreshToken);
+        var token = await _context.RefreshTokens.FirstOrDefaultAsync(rt =>
+            rt.Token == refreshToken
+        );
         if (token != null)
         {
             token.IsRevoked = true;
@@ -184,14 +188,21 @@ public class AuthService : IAuthService
 
     private string GenerateAccessToken(Guid userId, Guid organizationId, Role role)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not configured")));
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                _configuration["Jwt:Key"]
+                    ?? throw new InvalidOperationException("JWT key not configured")
+            )
+        );
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             new Claim("OrganizationId", organizationId.ToString()),
-            new Claim(ClaimTypes.Role, role.ToString())
+            new Claim("organizationId", organizationId.ToString()),
+            new Claim(ClaimTypes.Role, role.ToString()),
+            new Claim("role", role.ToString()),
         };
 
         var token = new JwtSecurityToken(
@@ -219,7 +230,7 @@ public class AuthService : IAuthService
             Token = tokenString,
             ExpiresAt = DateTime.UtcNow.AddDays(7),
             IsRevoked = false,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
 
         _context.RefreshTokens.Add(refreshToken);
